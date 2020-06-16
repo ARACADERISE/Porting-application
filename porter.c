@@ -38,7 +38,7 @@ PORTS* key_port_starter() {
     }
 
 	/* Booted into Normal Dimension Mode: A - 65 */\
-	kp->E_P.PPEntryPoints[PrintPortEntryPoints+1] = kp->dim[0].LETTER;\
+	kp->E_P.booted_dimension = kp->dim[0].LETTER;\
 
     /* For KeyPORT */
     kp->KeyPORT.KEY_PORT_ = KEY_PORT;

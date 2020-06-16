@@ -72,6 +72,7 @@ typedef struct {
     struct {
         int entry_points;
         char* PPEntryPoints;
+        char booted_dimension;
     } E_P;
 
     struct DIMENSIONS* dim;

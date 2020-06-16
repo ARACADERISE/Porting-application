@@ -6,7 +6,7 @@ int PRINT_PORT_ENTRY_POINTS;
 
 PORTS* key_port_starter() {
 
-    p* kp = calloc(1,sizeof(PORTS));
+    p* kp = (p*)malloc(sizeof(p));
 
     kp->i = 0;
     kp->E_P.entry_points = PrintPortEntryPoints+1;

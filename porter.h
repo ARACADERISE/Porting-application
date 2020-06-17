@@ -3,8 +3,10 @@
 #include <string.h>
 #include <stdlib.h>
 
-/* PORT ARRAY MAX SIze */
-#define MaxMemorySize 							0xAFF /* 2815 to begin with. Number will increase within each dimension */
+/* PORT ARRAY MAX SIZE */
+#define DefaultMemSize 							0xFFFF /* 
+    DefaultMemSize: Allocating 65535 indexes so we don't have to consanty re-allocate sizes.
+*/
 
 /* 
 	IMPORTANT PORT: KeyPort
@@ -13,6 +15,7 @@
 #define KeyPort									0xFA0 // Entry Port: 4000
 #define AllocPort 							0xEAE
 #define MEMPort   							0xAAf
+#define PrintPortDefault                0x1ABF // Indicator that application is appending a output
 #define PrintPortSTART					0x1ACF
 #define PrintPortEND    				0x1CB9
 #define PrintPortEntryPoints		PrintPortEND - PrintPortSTART
@@ -59,7 +62,7 @@ typedef struct {
 			The KEY_PORT will be the port that keeps track of everything going on, including memory mangement
 		*/
 		int KEY_PORT_;
-		size_t Memory[MaxMemorySize+1]; /* 
+		size_t Memory[DefaultMemSize+1]; /* 
 			Set to MaxMemory since blocks of memory will be managed at once, as well as re-assigned.
 			The Memory array will update everytime the recent port accesses memory.
 		*/
@@ -75,7 +78,21 @@ typedef struct {
         char booted_dimension;
     } E_P;
 
+    enum {
+        KEY_PORT=KeyPort,
+        ALLOC_PORT=AllocPort,
+        MEM_PORT=MEMPort,
+        PRINT_PORT=PrintPortDefault
+    } port;
+    enum {
+        NORM_DIM=Normal_Dim_Mode,
+        HIGH_DIM=High_Dim_Mode,
+        LOW_DIM=Low_Dim_Mode,
+        STRICT_DIM=Strict_Dim_Mode
+    } dimension;
+
     struct DIMENSIONS* dim;
+    struct DIM_STRUCT* dim_;
 	// To-Do
 	/* Make this struct useful for working with the ports */
 } PORTS;
@@ -87,6 +104,8 @@ typedef PORTS p;
 extern int PRINT_PORT_ENTRY_POINTS;
 
 PORTS* key_port_starter();
+struct DIM_STRUCT* key_port_setup_dim(PORTS* port);
+PORTS* key_port_adapt(PORTS* port);
 PORTS* key_port_update(PORTS* port, size_t mem_used, int port_id);
 
 #endif

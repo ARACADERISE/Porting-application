@@ -1,6 +1,7 @@
-#include "porter.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "porter.h"
+#include "dimensions.h"
 
 int PRINT_PORT_ENTRY_POINTS;
 
@@ -23,13 +24,13 @@ PORTS* key_port_starter() {
 		}
 	}
 
-    /* ASSIGNING A,B,C,D TO DIMENSION PORTS */\
-	DIM DIMENSIONS = {\
-		{Normal_Dim_Mode,kp->E_P.PPEntryPoints[0]},\
-		{High_Dim_Mode,kp->E_P.PPEntryPoints[1]},\
-		{Low_Dim_Mode,kp->E_P.PPEntryPoints[2]},\
-		{Strict_Dim_Mode,kp->E_P.PPEntryPoints[3]}\
-	};\
+    /* ASSIGNING A,B,C,D TO DIMENSION PORTS */
+	DIM DIMENSIONS = {
+		{Normal_Dim_Mode,kp->E_P.PPEntryPoints[0]},
+		{High_Dim_Mode,kp->E_P.PPEntryPoints[1]},
+		{Low_Dim_Mode,kp->E_P.PPEntryPoints[2]},
+		{Strict_Dim_Mode,kp->E_P.PPEntryPoints[3]}
+	};
 
     kp->dim = calloc(4,sizeof(kp->dim));
     for(int i = 0; i < 4; i++) {
@@ -42,7 +43,7 @@ PORTS* key_port_starter() {
 
     /* For KeyPORT */
     kp->KeyPORT.KEY_PORT_ = KEY_PORT;
-    kp->KeyPORT.Memory[kp->i] = MaxMemorySize;
+    kp->KeyPORT.Memory[kp->i] = DefaultMemSize;
 
     /* For port information. This will have the KEY_PORT number as the first index. */
     kp->KeyPORT.PortInformation.PrevPortNumbers[kp->i] = KEY_PORT;
@@ -53,7 +54,26 @@ PORTS* key_port_starter() {
     /* Assigned after re-defining PrintPortEntryPoints since PRINT_PORT_ENTRY_POINTS is static and keeps its value. */
     PRINT_PORT_ENTRY_POINTS = PrintPortEntryPoints;
 
+    /* Last but not least, assigning port and dimension */
+    kp->port=KEY_PORT; // Default: 4000
+    kp->dimension=NORM_DIM; // Default: 2640-A
+
+    key_port_setup_dim(kp);
+
     kp->i++;
 
     return kp;
+}
+
+struct DIM_STRUCT* key_port_setup_dim(PORTS* port) {
+    /* Setting this up for dimensions.c */
+    port->dim_ = malloc(sizeof(port->dim_));
+    port->dim_->ports = &port;
+    port->dim_->dim = &port->dim;
+    port->dim_->dimension_port = port->dimension;
+
+    default_dimension_setup(port);
+    free(port->dim);
+
+    return port->dim_;
 }

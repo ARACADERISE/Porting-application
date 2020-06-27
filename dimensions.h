@@ -3,9 +3,20 @@
 #include "porter.h"
 
 typedef struct DIM_STRUCT {
-    p** ports;
+    p* ports;
     struct DIMENSIONS** dim;
     int dimension_port;
+    struct {
+        int port_in_use;
+        size_t memory_span;
+        size_t from_memory_block; /* 
+            index of zero of ports memory array
+        */
+        int* memory_usage_blocks;
+    } NormalMode;
+    struct {} StrictMode;
+    struct {} HighMode;
+    struct {} LowMode;
 } DIM_;
 
 #define NORMAL_DIMENSION    0x1AF1 // 6897

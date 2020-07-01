@@ -6,9 +6,21 @@
 
 int PRINT_PORT_ENTRY_POINTS;
 
+int KEY_PORT;
+int ALLOC_PORT;
+int MEM_PORT;
+int PRINT_PORT_START;
+int PRINT_PORT_END;
+
 PORTS* key_port_starter() {
 
     p* kp = (p*)malloc(sizeof(p));
+
+    KEY_PORT = KeyPort;
+    ALLOC_PORT = AllocPort;
+    MEM_PORT = MEMPort;
+    PRINT_PORT_START = PrintPortSTART;
+    PRINT_PORT_END = PrintPortEND;
 
     kp->i = 0;
     kp->E_P.entry_points = PrintPortEntryPoints+1;

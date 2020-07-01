@@ -12,7 +12,7 @@ typedef struct DIM_STRUCT {
         size_t from_memory_block; /* 
             index of zero of ports memory array
         */
-        int* memory_usage_blocks;
+        size_t* memory_usage_blocks;
     } NormalMode;
     struct {} StrictMode;
     struct {} HighMode;

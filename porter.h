@@ -36,11 +36,11 @@ struct DIMENSIONS{
 } DIMENSIONS_;
 
 /* KEYS FOR THE PORTS */
-static int KEY_PORT = KeyPort;
-static int ALLOC_PORT = AllocPort;
-static int MEM_PORT = MEMPort;
-static int PRINT_PORT_START = PrintPortSTART;
-static int PRINT_PORT_END = PrintPortEND;
+extern int KEY_PORT;
+extern int ALLOC_PORT;
+extern int MEM_PORT;
+extern int PRINT_PORT_START;
+extern int PRINT_PORT_END;
 
 /* 
 	ARRAY DATA FOR THE PORTS. 
@@ -79,10 +79,10 @@ typedef struct {
     } E_P;
 
     enum {
-        KEY_PORT=KeyPort,
-        ALLOC_PORT=AllocPort,
-        MEM_PORT=MEMPort,
-        PRINT_PORT=PrintPortDefault
+        KEY_PORT_=KeyPort,
+        ALLOC_PORT_=AllocPort,
+        MEM_PORT_=MEMPort,
+        PRINT_PORT_=PrintPortDefault
     } port;
     enum {
         NORM_DIM=Normal_Dim_Mode,

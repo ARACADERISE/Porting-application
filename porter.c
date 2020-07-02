@@ -31,52 +31,67 @@ PORTS* key_port_starter() {
 		}
 	}
 
-    /* ASSIGNING A,B,C,D TO DIMENSION PORTS */
-	DIM DIMENSIONS = {
-		{Normal_Dim_Mode,kp->E_P.PPEntryPoints[0]},
+    struct DIMENSIONS *DIMENSIONS_ = calloc(4,sizeof(DIMENSIONS_));
+    /*DIM DIMENSIONS = {
+        {Normal_Dim_Mode,kp->E_P.PPEntryPoints[0]},
 		{High_Dim_Mode,kp->E_P.PPEntryPoints[1]},
 		{Low_Dim_Mode,kp->E_P.PPEntryPoints[2]},
 		{Strict_Dim_Mode,kp->E_P.PPEntryPoints[3]}
-	};
+    };*/
 
-  kp->dim = calloc(4,sizeof(kp->dim));
-  for(int i = 0; i < 4; i++) {
-    kp->dim[i].DIMENSION_NUMBER = DIMENSIONS[i].DIMENSION_NUMBER;
-    kp->dim[i].LETTER = DIMENSIONS[i].LETTER;
-  }
+    /* NORMAL DIMENSION: A:2640 */
+    DIMENSIONS_[0].DIMENSION_NUMBER = Normal_Dim_Mode;
+    DIMENSIONS_[0].LETTER = kp->E_P.PPEntryPoints[0];
+    /* HIGH DIMENSION: B:2785 */
+    DIMENSIONS_[1].DIMENSION_NUMBER = High_Dim_Mode;
+    DIMENSIONS_[1].LETTER = kp->E_P.PPEntryPoints[1];
+    /* LOW DIMENSIONS: C:3088 */
+    DIMENSIONS_[2].DIMENSION_NUMBER = Low_Dim_Mode;
+    DIMENSIONS_[2].LETTER = kp->E_P.PPEntryPoints[2];
+    /* STRICT DIMENSION: D:3313 */
+    DIMENSIONS_[3].DIMENSION_NUMBER = Strict_Dim_Mode;
+    DIMENSIONS_[3].LETTER = kp->E_P.PPEntryPoints[3];
 
-	/* Booted into Normal Dimension Mode: A - 65 */\
-	kp->E_P.booted_dimension = kp->dim[0].LETTER;\
+    kp->dim = calloc(4,sizeof(kp->dim));
+    for(int i = 0; i < 4; i++) {
+        kp->dim[i].DIMENSION_NUMBER = DIMENSIONS_[i].DIMENSION_NUMBER;
+        kp->dim[i].LETTER = DIMENSIONS_[i].LETTER;
+    }
+    // No longer needed
+    free(DIMENSIONS_);
 
-  /* For KeyPORT */
-  kp->KeyPORT.KEY_PORT_ = KEY_PORT;
-  kp->KeyPORT.Memory[kp->i] = DefaultMemSize;
+    /* Booted into Normal Dimension Mode: A - 65 */\
+    kp->E_P.booted_dimension = kp->dim[0].LETTER;\
 
-  /* For port information. This will have the KEY_PORT number as the first index. */
-  kp->KeyPORT.PortInformation.PrevPortNumbers[kp->i] = KEY_PORT;
-  kp->KeyPORT.PortInformation.MemoryFromPort[kp->i] = 0;
+    /* For KeyPORT */
+    kp->KeyPORT.KEY_PORT_ = KEY_PORT;
+    kp->KeyPORT.Memory[kp->i] = DefaultMemSize;
+
+    /* For port information. This will have the KEY_PORT number as the first index. */
+    kp->KeyPORT.PortInformation.PrevPortNumbers[kp->i] = KEY_PORT;
+    kp->KeyPORT.PortInformation.MemoryFromPort[kp->i] = 0;
     
 #undef PrintPortEntryPoints
 #define PrintPortEntryPoints PrintPortEND - PrintPortSTART - 26
 
-  /* Re-Allocating all 26 elements */
-  kp->E_P.PPEntryPoints = realloc(
-    kp->E_P.PPEntryPoints, 
-    (PrintPortEntryPoints + 26)*sizeof(p)
-  );
+    /* Re-Allocating all 26 elements */
+    kp->E_P.PPEntryPoints = realloc(
+        kp->E_P.PPEntryPoints, 
+        (PrintPortEntryPoints + 26)*sizeof(p)
+    );
 
-  /* Assigned after re-defining PrintPortEntryPoints since PRINT_PORT_ENTRY_POINTS is static and keeps its value. */
-  PRINT_PORT_ENTRY_POINTS = PrintPortEntryPoints;
+    /* Assigned after re-defining PrintPortEntryPoints since PRINT_PORT_ENTRY_POINTS is static and keeps its value. */
+    PRINT_PORT_ENTRY_POINTS = PrintPortEntryPoints;
 
-  /* Last but not least, assigning port and dimension */
-  kp->port=KEY_PORT; // Default: 4000
-  kp->dimension=NORM_DIM; // Default: 2640-A
+    /* Last but not least, assigning port and dimension */
+    kp->port=KEY_PORT; // Default: 4000
+    kp->dimension=NORM_DIM; // Default: 2640-A
 
-  key_port_setup_dim(kp);
+    key_port_setup_dim(kp);
 
-  kp->i++;
+    kp->i++;
 
-  return kp;
+    return kp;
 }
 
 struct DIM_STRUCT* key_port_setup_dim(PORTS* port) {

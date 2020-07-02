@@ -31,7 +31,7 @@ PORTS* key_port_starter() {
 		}
 	}
 
-    struct DIMENSIONS *DIMENSIONS_ = calloc(4,sizeof(DIMENSIONS_));
+    struct DIMENSIONS *DIMENSIONS_ = calloc(4,sizeof(struct DIMENSIONS));
     /*DIM DIMENSIONS = {
         {Normal_Dim_Mode,kp->E_P.PPEntryPoints[0]},
 		{High_Dim_Mode,kp->E_P.PPEntryPoints[1]},

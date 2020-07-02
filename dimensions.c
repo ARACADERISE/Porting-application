@@ -4,10 +4,16 @@
 
 DIM_* default_dimension_setup(PORTS* port) {
     DIM_* dim = malloc(sizeof(DIM_));
+    dim->DimensionIndexNumber = 0;
 
     dim->ports = port->dim_->ports;
-    dim->dim = port->dim_->dim;
-    dim->dimension_port = port->dim_->dimension_port;  
+    /* 
+        dim->dim will be a struct array for storing seperate uses of each dimension in a 
+        seperate index number(dim->DimensionIndexNumber)
+    */
+    dim->dim = calloc(1,sizeof(dim->dim));
+    dim->dim[dim->DimensionIndexNumber] = *port->dim_->dim;
+    dim->dimension_port = port->dim_->dimension_port;
     
     return dimension_get_dimension_port(dim); 
 }

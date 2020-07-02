@@ -3,6 +3,7 @@
 #include "porter.h"
 
 typedef struct DIM_STRUCT {
+    int DimensionIndexNumber;
     p* ports;
     struct DIMENSIONS** dim;
     int dimension_port;

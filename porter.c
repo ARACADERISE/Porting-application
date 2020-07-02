@@ -14,7 +14,7 @@ int PRINT_PORT_END = PrintPortEND;
 
 PORTS* key_port_starter() {
 
-    p* kp = (p*) malloc(sizeof(p));
+    p* kp = malloc(sizeof(p));
 
     kp->i = 0;
     kp->E_P.entry_points = PrintPortEntryPoints+1;
@@ -31,7 +31,7 @@ PORTS* key_port_starter() {
 		}
 	}
 
-    struct DIMENSIONS *DIMENSIONS_ = (struct DIMENSIONS*) calloc(4,sizeof(struct DIMENSIONS));
+    struct DIMENSIONS *DIMENSIONS_ = calloc(4,sizeof(struct DIMENSIONS));
     /*DIM DIMENSIONS = {
         {Normal_Dim_Mode,kp->E_P.PPEntryPoints[0]},
 		{High_Dim_Mode,kp->E_P.PPEntryPoints[1]},
@@ -52,7 +52,7 @@ PORTS* key_port_starter() {
     DIMENSIONS_[3].DIMENSION_NUMBER = Strict_Dim_Mode;
     DIMENSIONS_[3].LETTER = kp->E_P.PPEntryPoints[3];
 
-    kp->dim = (struct DIMENSIONS*) calloc(4,sizeof(DIMENSIONS_));
+    kp->dim = calloc(4,sizeof(DIMENSIONS_));
     for(int i = 0; i < 4; i++) {
         kp->dim[i].DIMENSION_NUMBER = DIMENSIONS_[i].DIMENSION_NUMBER;
         kp->dim[i].LETTER = DIMENSIONS_[i].LETTER;

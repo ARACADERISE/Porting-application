@@ -11,7 +11,8 @@ typedef struct DIM_STRUCT {
         int port_in_use;
         size_t memory_span;
         size_t from_memory_block; /* 
-            This will be the total ammount of memory leftover from struct PORTS Memory array lists last allocation(index number i).
+            This will be the total ammount of memory leftover from struct PORTS Memory array lists last 
+            allocation(index number i) - the total memory in the now active dimension.
         */
         size_t* memory_usage_blocks;
     } NormalMode;

@@ -85,6 +85,8 @@ typedef struct {
         STRICT_DIM=Strict_Dim_Mode
     } dimension;
 
+    /* We need 2 DIM_ structs(dim and dim_) because dim - holds the dimension_port and the letter to the dimension and dim_ -
+    sets up the actual DIM_ struct that will carry the information throughout the application */
     struct DIMENSIONS* dim;
     struct DIM_STRUCT* dim_;
 	// To-Do

@@ -43,16 +43,10 @@ extern int PRINT_PORT_START;
 extern int PRINT_PORT_END;
 
 /* 
-	ARRAY DATA FOR THE PORTS. 
-	PP: PrintPort 
-*/
-//static char PPEntryPoints[PrintPortEntryPoints+1/*+1: For the dimension.*/];
-
-/* 
 	Easier to use DIM instead of having to re-define DIMENSIONS using :
 	struct DIMENSIONS DIMENSIONS[] = {}
 */
-typedef struct DIMENSIONS DIM[];
+//typedef struct DIMENSIONS DIM[];
 
 /* STRUCT WORKING WITH PORTS */
 typedef struct {

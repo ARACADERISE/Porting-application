@@ -21,23 +21,17 @@ PORTS* key_port_starter() {
     kp->E_P.PPEntryPoints = calloc(kp->E_P.entry_points,sizeof(char));
 
     static char CHARACTER = 0x41;
-	for(int i = 0; i < PrintPortEntryPoints; i++) {
-		if(i==27) break;
-		if(!(CHARACTER==0x5A)) {
-			memset(&kp->E_P.PPEntryPoints[i],CHARACTER,sizeof(char));
-			CHARACTER++;
-		} else {
-			memset(&kp->E_P.PPEntryPoints[i],0x5A,sizeof(char));
-		}
-	}
+    for(int i = 0; i < PrintPortEntryPoints; i++) {
+      if(i==27) break;
+      if(!(CHARACTER==0x5A)) {
+        memset(&kp->E_P.PPEntryPoints[i],CHARACTER,sizeof(char));
+        CHARACTER++;
+      } else {
+        memset(&kp->E_P.PPEntryPoints[i],0x5A,sizeof(char));
+      }
+    }
 
     struct DIMENSIONS *DIMENSIONS_ = calloc(4,sizeof(struct DIMENSIONS));
-    /*DIM DIMENSIONS = {
-        {Normal_Dim_Mode,kp->E_P.PPEntryPoints[0]},
-		{High_Dim_Mode,kp->E_P.PPEntryPoints[1]},
-		{Low_Dim_Mode,kp->E_P.PPEntryPoints[2]},
-		{Strict_Dim_Mode,kp->E_P.PPEntryPoints[3]}
-    };*/
 
     /* NORMAL DIMENSION: A:2640 */
     DIMENSIONS_[0].DIMENSION_NUMBER = Normal_Dim_Mode;

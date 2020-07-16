@@ -11,7 +11,7 @@ typedef struct DIM_STRUCT {
         int port_in_use;
         size_t memory_span;
         size_t from_memory_block; /* 
-            index of zero of ports memory array
+            This will be the total ammount of memory leftover from it's last allocations.
         */
         size_t* memory_usage_blocks;
     } NormalMode;

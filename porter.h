@@ -57,7 +57,7 @@ typedef struct {
 		*/
 		int KEY_PORT_;
 		size_t Memory[DefaultMemSize+1]; /* 
-			Set to MaxMemory since blocks of memory will be managed at once, as well as re-assigned.
+			Index 0 is set to MaxMemory since blocks of memory will be managed at once, as well as re-assigned.
 			The Memory array will update everytime the recent port accesses memory.
 		*/
 		struct {
@@ -85,7 +85,7 @@ typedef struct {
         STRICT_DIM=Strict_Dim_Mode
     } dimension;
 
-    /* We need 2 DIM_ structs(dim and dim_) because dim - holds the dimension_port and the letter to the dimension and dim_ -
+    /* We need 2 DIM_ structs(dim and dim_) because dim - holds the DIMENSION_NUMBER and the letter to the dimension and dim_ -
     sets up the actual DIM_ struct that will carry the information throughout the application */
     struct DIMENSIONS* dim;
     struct DIM_STRUCT* dim_;

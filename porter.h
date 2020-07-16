@@ -50,7 +50,7 @@ extern int PRINT_PORT_END;
 
 /* STRUCT WORKING WITH PORTS */
 typedef struct {
-    int i;
+    int i; // Index number for Memory
 	struct {
 		/* 
 			The KEY_PORT will be the port that keeps track of everything going on, including memory mangement

@@ -56,6 +56,7 @@ PORTS* key_port_starter() {
 
     /* Booted into Normal Dimension Mode: A - 65 */
     kp->E_P.booted_dimension = kp->dim[0].LETTER;
+    kp->E_P.default_port = MEM_PORT;
 
     /* For KeyPORT */
     kp->KeyPORT.KEY_PORT_ = KEY_PORT;
@@ -93,9 +94,9 @@ struct DIM_STRUCT* key_port_setup_dim(PORTS* port) {
     port->dim_ = malloc(sizeof(port->dim_)); // We want a simple block of memory
     port->dim_->ports = port;
     port->dim_->dim = &port->dim;
-    port->dim_->dimension_port = port->dimension;
+    port->dim_->dimension_id = port->dimension;
 
-    default_dimension_setup(port);
+    default_dimension_setup(port,port->dim_->dimension_id);
     // Releasing dim_ struct. dim struct needs to stay..it stores DIMENSION_NUMBER and each dimensions letter symbol
     free(port->dim_);
 

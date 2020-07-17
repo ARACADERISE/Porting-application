@@ -1,5 +1,6 @@
 #ifndef PORTER_H
 #define PORTER_H
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -28,6 +29,7 @@
 #define High_Dim_Mode  	0xAE1 // Dimension Port: 2785:B
 #define Low_Dim_Mode		0xC10 // Dimension Port: 3088:C
 #define Strict_Dim_Mode	0xCF1 // Dimension Port: 3313:D
+
 
 /* STRUCT WORKING WITH DIMENSIONS */
 struct DIMENSIONS{
@@ -70,6 +72,7 @@ typedef struct {
         int entry_points;
         char* PPEntryPoints;
         char booted_dimension;
+        int default_port;
     } E_P;
 
     enum {

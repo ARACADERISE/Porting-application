@@ -6,7 +6,7 @@ typedef struct DIM_STRUCT {
     int DimensionIndexNumber;
     p* ports;
     struct DIMENSIONS** dim;
-    int dimension_port;
+    int dimension_id;
     struct {
         int port_in_use;
         size_t memory_span;
@@ -29,7 +29,7 @@ typedef struct DIM_STRUCT {
 */
 #define HIGH_DIMENSION      0xDCF2 // 56562
 
-DIM_* default_dimension_setup(PORTS* port);
-DIM_* dimension_get_dimension_port(DIM_* dim);
+DIM_* default_dimension_setup(PORTS* port, int dim_port);
+DIM_* dimension_get_dimension_port(DIM_** dim);
 
 #endif

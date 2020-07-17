@@ -1,104 +1,123 @@
 #include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include "porter.h"
 #include "dimensions.h"
+#include "porter.h"
 
-int PRINT_PORT_ENTRY_POINTS;
+// Setting up dimension struct
+DIM_* default_dimension_setup(PORTS* port,int dim_port) {
+    DIM_** dim = calloc(5,sizeof(DIM_**)); // the index of zero will be the "extra"
+    /*
+        Memory allocation still needs to happen so we allocate a chunk of memory for each..
+    */
+    for(int i = 0; i < 5; i++)
+        dim[i] = malloc(sizeof(DIM_**)*sizeof(struct PORT_STRUCT));
+    /*dim[0] = malloc(sizeof(DIM_**)*sizeof(struct PORT_STRUCT));
+    dim[1] = malloc(sizeof(DIM_**));
+    dim[2] = malloc(sizeof(DIM_**));
+    dim[3] = malloc(sizeof(DIM_**));
+    dim[4] = malloc(sizeof(DIM_**));*/
 
-int KEY_PORT = KeyPort;
-int ALLOC_PORT = AllocPort;
-int MEM_PORT = MEMPort;
-int PRINT_PORT_START = PrintPortSTART;
-int PRINT_PORT_END = PrintPortEND;
+    dim[0]->DimensionIndexNumber = 0;
 
-PORTS* key_port_starter() {
+    dim[0]->ports = port->dim_->ports;
+    dim[0]->ports->dim_->dimension_id = dim_port; /*
+        For some reason, when we allocate memory for the dim struct array, the dimension_port changes to 
+        49(from its default value of 2640:a, the default dimension bootup)
+    */
 
-    p* kp = malloc(sizeof(p));
+    /* 
+        dim->dim will be a struct array for storing seperate uses of each dimension in a 
+        seperate index number(dim->DimensionIndexNumber)
+    */
+    dim[0]->dim = calloc(1,sizeof(struct DIMENSIONS**));
+    dim[0]->dim[dim[0]->DimensionIndexNumber] = *port->dim_->dim;
+    dim[0]->dimension_id = dim[0]->ports->dim_->dimension_id;
 
-    kp->i = 0;
-    kp->E_P.entry_points = PrintPortEntryPoints+1;
-    kp->E_P.PPEntryPoints = calloc(kp->E_P.entry_points,sizeof(char));
+    /* Setting all modes to -1 */
 
-    static char CHARACTER = 0x41;
-    for(int i = 0; i < PrintPortEntryPoints; i++) {
-      if(i==27) break;
-      if(!(CHARACTER==0x5A)) {
-        memset(&kp->E_P.PPEntryPoints[i],CHARACTER,sizeof(char));
-        CHARACTER++;
-      } else {
-        memset(&kp->E_P.PPEntryPoints[i],0x5A,sizeof(char));
-      }
-    }
-
-    struct DIMENSIONS *DIMENSIONS_ = calloc(4,sizeof(struct DIMENSIONS));
-
-    /* NORMAL DIMENSION: A:2640 */
-    DIMENSIONS_[0].DIMENSION_NUMBER = Normal_Dim_Mode;
-    DIMENSIONS_[0].LETTER = kp->E_P.PPEntryPoints[0];
-    /* HIGH DIMENSION: B:2785 */
-    DIMENSIONS_[1].DIMENSION_NUMBER = High_Dim_Mode;
-    DIMENSIONS_[1].LETTER = kp->E_P.PPEntryPoints[1];
-    /* LOW DIMENSIONS: C:3088 */
-    DIMENSIONS_[2].DIMENSION_NUMBER = Low_Dim_Mode;
-    DIMENSIONS_[2].LETTER = kp->E_P.PPEntryPoints[2];
-    /* STRICT DIMENSION: D:3313 */
-    DIMENSIONS_[3].DIMENSION_NUMBER = Strict_Dim_Mode;
-    DIMENSIONS_[3].LETTER = kp->E_P.PPEntryPoints[3];
-
-    kp->dim = calloc(4,sizeof(DIMENSIONS_));
-    for(int i = 0; i < 4; i++) {
-        kp->dim[i].DIMENSION_NUMBER = DIMENSIONS_[i].DIMENSION_NUMBER;
-        kp->dim[i].LETTER = DIMENSIONS_[i].LETTER;
-    }
-    // No longer needed
-    free(DIMENSIONS_);
-
-    /* Booted into Normal Dimension Mode: A - 65 */
-    kp->E_P.booted_dimension = kp->dim[0].LETTER;
-    kp->E_P.default_port = MEM_PORT;
-
-    /* For KeyPORT */
-    kp->KeyPORT.KEY_PORT_ = KEY_PORT;
-    kp->KeyPORT.Memory[kp->i] = DefaultMemSize;
-
-    /* For port information. This will have the KEY_PORT number as the first index. */
-    kp->KeyPORT.PortInformation.PrevPortNumbers[kp->i] = KEY_PORT;
-    kp->KeyPORT.PortInformation.MemoryFromPort[kp->i] = 0;
+    // NormalMode
+    dim[1]->NormalMode.port_in_use = -1;
+    dim[1]->NormalMode.memory_span = -1;
+    dim[1]->NormalMode.from_memory_block = -1;
+    // ToDo: Strict mode
     
-#undef PrintPortEntryPoints
-#define PrintPortEntryPoints PrintPortEND - PrintPortSTART - 26
-
-    /* Re-Allocating all 26 elements */
-    kp->E_P.PPEntryPoints = realloc(
-        kp->E_P.PPEntryPoints, 
-        (PrintPortEntryPoints + 26)*sizeof(p)
-    );
-
-    /* Assigned after re-defining PrintPortEntryPoints since PRINT_PORT_ENTRY_POINTS is static and keeps its value. */
-    PRINT_PORT_ENTRY_POINTS = PrintPortEntryPoints;
-
-    /* Last but not least, assigning port and dimension */
-    kp->port=KEY_PORT; // Default: 4000
-    kp->dimension=NORM_DIM; // Default: 2640-A
-
-    key_port_setup_dim(kp);
-
-    kp->i++;
-
-    return kp;
+    return dimension_get_dimension_port(dim); 
 }
 
-struct DIM_STRUCT* key_port_setup_dim(PORTS* port) {
-    /* Setting this up for dimensions.c */
-    port->dim_ = malloc(sizeof(port->dim_)); // We want a simple block of memory
-    port->dim_->ports = port;
-    port->dim_->dim = &port->dim;
-    port->dim_->dimension_id = port->dimension;
+// This will release a certain block of memory co-relating to a certain dimension instead of releasing memory of the whole DIM_ struct
+DIM_* release_normal_mode_memory(DIM_** dim) {
+    
+    /* 
+        Reseting all ideals to void pointers(or -1)...free function cannot be used on non-void ideals.. 
 
-    default_dimension_setup(port,port->dim_->dimension_id);
-    // Releasing dim_ struct. dim struct needs to stay..it stores DIMENSION_NUMBER and each dimensions letter symbol
-    free(port->dim_);
+        port_in_use and memory_span will stay. No need to release some very very basic and useful logic 
+        from the dimension.
+    */
 
-    return port->dim_;
+    // This needs to be done. We cannot store this while the dimension is not in use..will occurr in a memory error
+    dim[1]->NormalMode.from_memory_block = -1;
+    // Since the user wants to release memory of the Normal Mode dimension, that means we need to clear all memory kept about its memory usage
+    free(dim[1]->NormalMode.memory_usage_blocks); // Free it
+    dim[1]->NormalMode.memory_usage_blocks = (void*)0; // Set it to a void pointer
+
+    // Releasing rest of memory..
+    free(dim[1]);
+
+    return *dim;
+}
+
+// Test Function
+DIM_* dimension_update_normal_mode(DIM_** dim) {
+    return *dim;
+}
+
+DIM_* dimension_setup_normal_mode(DIM_** dim) {
+
+    /*
+        If the memory_usage_blocks is a void pointer, then that means there has been no memory 
+        allocations on normal_mode, or it has
+        been recently released.
+    */
+    if(dim[1]->NormalMode.from_memory_block==-1) {
+        //dim[1]->NormalMode.port_in_use = dim[0]->dimension_port;
+        dim[1]->NormalMode.memory_span = NORMAL_DIMENSION;
+        dim[1]->NormalMode.from_memory_block = dim[0]->ports->KeyPORT.Memory[0]-dim[1]->NormalMode.memory_span;
+
+        /* Allocating block memory */
+        dim[1]->NormalMode.memory_usage_blocks = calloc(
+            dim[1]->NormalMode.from_memory_block+1,
+            sizeof(dim[1]->NormalMode.memory_usage_blocks)
+        );
+        dim[1]->NormalMode.memory_usage_blocks[0] = dim[1]->NormalMode.from_memory_block;
+    }
+    else {
+        // ToDo: Figure out what to do with the already existing information
+        return dimension_update_normal_mode(dim);
+    }
+
+    return *dim;
+}
+DIM_* dimensions_setup_strict_mode(DIM_** dim) {
+
+    //dim->StrictMode.port_in_use = dim->dimension_port;
+    //dim->StrictMode.memory_span = STRICT_DIMENSION;
+
+    return *dim;
+}
+DIM_* dimensions_setup_high_mode(DIM_** dim) {
+    return *dim;
+}
+DIM_* dimension_setup_low_mode(DIM_** dim) {
+    return *dim;
+}
+
+DIM_* dimension_get_dimension_port(DIM_** dim) {
+
+    switch(dim[0]->dimension_id) {
+        case Normal_Dim_Mode: dimension_setup_normal_mode(dim);break;
+        case Strict_Dim_Mode: dimensions_setup_strict_mode(dim);break;
+        case High_Dim_Mode: dimensions_setup_high_mode(dim);break;
+        case Low_Dim_Mode: dimension_setup_low_mode(dim);break;
+    }
+
+    return *dim;
 }

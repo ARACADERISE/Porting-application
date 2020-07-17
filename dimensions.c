@@ -6,7 +6,7 @@
 DIM_* default_dimension_setup(PORTS* port,int dim_port) {
     DIM_** dim = calloc(5,sizeof(DIM_**)); // the index of zero will be the "extra"
     /*
-        Memory allocation still needs to happend so we allocate a chunk of memory
+        Memory allocation still needs to happen so we allocate a chunk of memory for each..
     */
     dim[0] = malloc(sizeof(DIM_**));
     dim[1] = malloc(sizeof(DIM_**));

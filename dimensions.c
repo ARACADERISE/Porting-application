@@ -8,11 +8,13 @@ DIM_* default_dimension_setup(PORTS* port,int dim_port) {
     /*
         Memory allocation still needs to happen so we allocate a chunk of memory for each..
     */
-    dim[0] = malloc(sizeof(DIM_**));
+    for(int i = 0; i < 5; i++)
+        dim[i] = malloc(sizeof(DIM_**)*sizeof(struct PORT_STRUCT));
+    /*dim[0] = malloc(sizeof(DIM_**)*sizeof(struct PORT_STRUCT));
     dim[1] = malloc(sizeof(DIM_**));
     dim[2] = malloc(sizeof(DIM_**));
     dim[3] = malloc(sizeof(DIM_**));
-    dim[4] = malloc(sizeof(DIM_**));
+    dim[4] = malloc(sizeof(DIM_**));*/
 
     dim[0]->DimensionIndexNumber = 0;
 
@@ -30,12 +32,12 @@ DIM_* default_dimension_setup(PORTS* port,int dim_port) {
     dim[0]->dim[dim[0]->DimensionIndexNumber] = *port->dim_->dim;
     dim[0]->dimension_id = dim[0]->ports->dim_->dimension_id;
 
-    /* Setting all modes to void pointer */
+    /* Setting all modes to -1 */
 
     // NormalMode
-    dim[1]->NormalMode.port_in_use = (void*)0;
-    dim[1]->NormalMode.memory_span = (void*)0;
-    dim[1]->NormalMode.from_memory_block = (void*)0;
+    dim[1]->NormalMode.port_in_use = -1;
+    dim[1]->NormalMode.memory_span = -1;
+    dim[1]->NormalMode.from_memory_block = -1;
     // ToDo: Strict mode
     
     return dimension_get_dimension_port(dim); 
@@ -45,17 +47,20 @@ DIM_* default_dimension_setup(PORTS* port,int dim_port) {
 DIM_* release_normal_mode_memory(DIM_** dim) {
     
     /* 
-        Reseting all ideals to void pointers...free function cannot be used on non-void ideals.. 
+        Reseting all ideals to void pointers(or -1)...free function cannot be used on non-void ideals.. 
 
         port_in_use and memory_span will stay. No need to release some very very basic and useful logic 
         from the dimension.
     */
 
     // This needs to be done. We cannot store this while the dimension is not in use..will occurr in a memory error
-    dim[1]->NormalMode.from_memory_block = (void*)0;
+    dim[1]->NormalMode.from_memory_block = -1;
     // Since the user wants to release memory of the Normal Mode dimension, that means we need to clear all memory kept about its memory usage
     free(dim[1]->NormalMode.memory_usage_blocks); // Free it
     dim[1]->NormalMode.memory_usage_blocks = (void*)0; // Set it to a void pointer
+
+    // Releasing rest of memory..
+    free(dim[1]);
 
     return *dim;
 }
@@ -72,7 +77,7 @@ DIM_* dimension_setup_normal_mode(DIM_** dim) {
         allocations on normal_mode, or it has
         been recently released.
     */
-    if(dim[1]->NormalMode.from_memory_block==(void*)0) {
+    if(dim[1]->NormalMode.from_memory_block==-1) {
         //dim[1]->NormalMode.port_in_use = dim[0]->dimension_port;
         dim[1]->NormalMode.memory_span = NORMAL_DIMENSION;
         dim[1]->NormalMode.from_memory_block = dim[0]->ports->KeyPORT.Memory[0]-dim[1]->NormalMode.memory_span;
